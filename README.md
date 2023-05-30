@@ -44,7 +44,7 @@ docker-compose run --rm autollamo
 
 ## 🚧 Limitations
 
-1. Only an alpha version, committed to GitHub recently. For example, there is no long or short term memory management yet and there are very few plugins.
+1. Only a pre-alpha version, committed to GitHub recently. For example, there is no long or short term memory management yet and there are very few plugins.
 2. Like Auto-GPT it may not perform well in complex, real-world business scenarios.
 3. Quite expensive to run, so set and monitor your API key limits with OpenAI!
 
