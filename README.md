@@ -4,9 +4,9 @@ An experimental open-source application that creates assistants, powered by LLMs
 ## 🙌 Acknowledgements
 We would like to thank the [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) contributors for their work and inspiration. AutoLLaMo builds from their efforts and enables contributions from C# developers in this space. Please visit [their website](https://news.agpt.co/) to learn more and support their project.
 
-## 🚀 Features
+## 🌟 Features
 
-- 🔄 Designed to expand its capabilities by creating its own Plugins
+- 🔄 Expands its capabilities by generating its own Plugins
 - 🔌 Extensibility with Plugins
 
 ## 🛠️ Prerequisites
