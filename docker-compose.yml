@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  autollamo:
+    image: autollamo
+    build:
+      context: .
+      dockerfile: src/AutoLLaMo.ConsoleApp/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - OutputDirectory=/app/outputdirectory
+    profiles: ["exclude-from-up"]
+    volumes:
+      #- "./autollamo:/app"
+      #- ".env:/app/.env"
+      - type: bind
+        source: ${OutputDirectory}
+        target: /app/outputdirectory
