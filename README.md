@@ -49,10 +49,14 @@ docker-compose run --rm autollamo
 3. Quite expensive to run, so set and monitor your API key limits with OpenAI!
 
 ## ⚖️ Disclaimer
-AutoLLaMo is an experimental project provided "as is" without any warranties, express or implied. By using this software, you agree to assume all risks related to its use, including but not limited to data loss, system failure, costs, or other potential issues. The authors of AutoLLaMo do not accept responsibility or liability for any losses, damages, or other consequences resulting from using this software. You are solely responsible for decisions and actions performed by AutoLLaMo.
+AutoLLaMo is provided "as is", without guarantees. It runs autonomously and users are responsible for its supervision and all associated risks, including potential data loss or system failure. The creators of AutoLLaMo are not liable for any issues arising from its use.
 
-**Please note that using OpenAI APIs can be costly due to token usage.** By using this project, you acknowledge responsibility for monitoring and managing your token usage and associated costs. Therefore, it is strongly recommended to regularly check your OpenAI API and other external service usage and set up necessary limits or alerts to prevent unexpected charges.
+This software does not guarantee data privacy or security. Users are advised to not input sensitive or personal data.
 
-As an autonomously-driven software application, AutoLLaMo may generate content or take actions that do not align with real-world business practices or legal requirements. You are responsible for ensuring that actions or decisions based on this software's output comply with all applicable laws, regulations, and ethical standards. Therefore, please exercise caution and use your best judgment when implementing or relying on AutoLLaMo's output or actions.
+**OpenAI APIs can incur high costs due to token usage.** Users should monitor their token usage and costs, set up limits or alerts, and manage external services to avoid unexpected charges.
 
-By using AutoLLaMo, you agree to indemnify, defend, and hold harmless the developers, contributors, and any affiliated parties from and against any and all claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees), whether in an action of contract, tort or otherwise, arising from your use of this software.
+AutoLLaMo may produce content or actions inconsistent with legal or business standards due to its autonomous nature. Users must ensure compliance with laws, regulations, and ethical norms when using this software's output.
+
+By using AutoLLaMo, users agree to protect the developers, contributors, and affiliated parties against any claims or damages arising from their use of the software.
+
+This software is distributed under the MIT License. By using this software, you agree to the terms of this license.
