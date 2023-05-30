@@ -1,4 +1,4 @@
-# AutoLLaMo: Autonomous LLM-powered Assistants, written in C#
+# AutoLLaMo: Autonomous LLM AI Assistants, written in C#
 An experimental open-source application that creates assistants, powered by LLMs such as GPT-4, to autonomously achieve your goals. By providing LLMs with a toolset with which to interact with the world, this project explores the full potential of autonimous AI.
 
 ## 🙌 Acknowledgements
