@@ -27,6 +27,8 @@ git clone https://github.com/rbeauchamp/AutoLLaMo.git
     - Open the newly created `.env` file using a text editor.
     - Search for the line containing `OpenAIApiKey=`.
     - After the "=", input your unique OpenAI API Key (excluding any quotes or spaces).
+    - Search for the line containing `OutputDirectory=`.
+    - After the "=", input the directory where you would like AutoLLaMo to write files. For example `${USERPROFILE}\Documents\AutoLLaMoOutput`.
     - Save the `.env` file and close it. (Do not add this file to source control since it contains your secret keys.)
 
 5. Open a terminal in the root `/AutoLLaMo` directory and build the image using Docker Compose
