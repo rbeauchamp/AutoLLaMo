@@ -6,7 +6,7 @@ We would like to thank the [Auto-GPT](https://github.com/Significant-Gravitas/Au
 
 ## 🚀 Features
 
-- 🔄 Architected to expand its capabilities by creating its own Plugins
+- 🔄 Designed to expand its capabilities by creating its own Plugins
 - 🔌 Extensibility with Plugins
 
 ## 🛠️ Prerequisites
