@@ -83,4 +83,4 @@ We expect all our contributors to abide by the [Code of Conduct](CODE_OF_CONDUCT
 
 ## 📋 License
 
-AutoLLaMo is distributed under the MIT License. Check out the [LICENSE](LICENSE.md) file for more information.
+AutoLLaMo is distributed under the MIT License. Check out the [LICENSE](LICENSE) file for more information.
