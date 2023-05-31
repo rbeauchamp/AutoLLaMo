@@ -4,16 +4,16 @@ AutoLLaMo is an experimental open-source application that uses large language mo
 
 ## Table of Contents
 
-- [Acknowledgements](#acknowledgements)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Limitations](#limitations)
-- [Disclaimer](#disclaimer)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [License](#license)
-- [Contact](#contact)
+- [Acknowledgements](#-acknowledgements)
+- [Features](#-features)
+- [Prerequisites](#-prerequisites)
+- [Quick Start](#-quick-start)
+- [Limitations](#-limitations)
+- [Disclaimer](#%EF%B8%8F-disclaimer)
+- [Contributing](#-contributing)
+- [Code of Conduct](#-code-of-conduct)
+- [License](#-license)
+- [Contact](#-contact)
 
 ## 🙌 Acknowledgements
 
