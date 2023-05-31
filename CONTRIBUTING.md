@@ -60,6 +60,7 @@ This section lists the labels we use to help us track and manage issues and pull
 * **help wanted** - Extra attention is needed.
 * **invalid** - This doesn't seem right.
 * **question** - Further information is requested.
+* **security** - A security vulnerability has been discovered.
 * **wontfix** - This will not be worked on.
 
 Thank you for considering contributing to AutoLLaMo!
