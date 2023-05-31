@@ -1,7 +1,22 @@
 # AutoLLaMo: Autonomous LLM AI Assistants, written in C#
-An experimental open-source application that creates assistants, powered by LLMs such as GPT-4, to autonomously achieve your goals. By providing LLMs with a toolset with which to interact with the world, this project explores the full potential of autonimous AI.
+
+AutoLLaMo is an experimental open-source application that uses large language models (LLMs) like GPT-4 to create autonomous assistants. By providing LLMs with a toolset to interact with the world, AutoLLaMo aims to unlock the full potential of autonomous AI.
+
+## Table of Contents
+
+- [Acknowledgements](#acknowledgements)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Limitations](#limitations)
+- [Disclaimer](#disclaimer)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+- [Contact](#contact)
 
 ## 🙌 Acknowledgements
+
 We would like to thank the [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) contributors for their work and inspiration. AutoLLaMo builds from their efforts and enables contributions from C# developers in this space. Please visit [their website](https://news.agpt.co/) to learn more and support their project.
 
 ## 🌟 Features
@@ -10,17 +25,17 @@ We would like to thank the [Auto-GPT](https://github.com/Significant-Gravitas/Au
 - 🔌 Extensibility with Plugins
 
 ## 🛠️ Prerequisites
+
 - [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 ## 🚀 Quick Start
-1. Set up your OpenAI [API Key](https://platform.openai.com/account/api-keys)
 
+1. Set up your OpenAI [API Key](https://platform.openai.com/account/api-keys)
 2. Clone this repository
 ``` shell
 git clone https://github.com/rbeauchamp/AutoLLaMo.git
 ```
-
 3. Configure your environment variables:
     - Locate the file named `.env.template` within the root `/AutoLLaMo` directory.
     - Duplicate this file and rename it as `.env` by removing the template extension.
@@ -30,14 +45,11 @@ git clone https://github.com/rbeauchamp/AutoLLaMo.git
     - Search for the line containing `OutputDirectory=`.
     - After the "=", input the directory where you would like AutoLLaMo to write files. For example `${USERPROFILE}\Documents\AutoLLaMoOutput`.
     - Save the `.env` file and close it. (Do not add this file to source control since it contains your secret keys.)
-
-5. Open a terminal in the root `/AutoLLaMo` directory and build the image using Docker Compose
-
+4. Open a terminal in the root `/AutoLLaMo` directory and build the image using Docker Compose
 ``` shell
 docker-compose build autollamo
 ```
-
-6. Run AutoLLaMo
+5. Run AutoLLaMo
 ``` shell
 docker-compose run --rm autollamo
 ```
@@ -60,3 +72,15 @@ AutoLLaMo may produce content or actions inconsistent with legal or business sta
 By using AutoLLaMo, users agree to protect the developers, contributors, and affiliated parties against any claims or damages arising from their use of the software.
 
 This software is distributed under the MIT License. By using this software, you agree to the terms of this license.
+
+## 📝 Contributing
+
+We value all the people who are interested in contributing to AutoLLaMo. If you want to contribute to this project, be sure to review the [CONTRIBUTING.md](CONTRIBUTING.md) file. It contains the necessary information about how you can start contributing and the guidelines we follow.
+
+## 👥 Code of Conduct
+
+We expect all our contributors to abide by the [Code of Conduct](CODE_OF_CONDUCT.md). Please read the full text so that you can understand what actions will not be tolerated.
+
+## 📋 License
+
+AutoLLaMo is distributed under the MIT License. Check out the [LICENSE](LICENSE.md) file for more information.
