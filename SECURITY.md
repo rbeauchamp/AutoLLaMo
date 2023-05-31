@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within AutoLLaMo, please create a new issue in our [GitHub Issue Tracker](https://github.com/rbeauchamp/AutoLLaMo/issues).
+If you discover a security vulnerability within AutoLLaMo, please create a new issue in our [GitHub Issue Tracker](https://github.com/rbeauchamp/AutoLLaMo/security/advisories/new).
 
 ### Guidelines for reporting security issues
 
