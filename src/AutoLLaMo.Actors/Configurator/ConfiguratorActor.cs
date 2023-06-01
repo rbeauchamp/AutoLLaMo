@@ -6,6 +6,8 @@ using AutoLLaMo.Common;
 using AutoLLaMo.Model;
 using AutoLLaMo.Model.Messages.Chats;
 using AutoLLaMo.Model.Messages.Events;
+using AutoLLaMo.Model.Thoughts;
+using AutoLLaMo.Plugins;
 using AutoLLaMo.Services.OpenAI;
 using Proto;
 using Proto.Extensions;
@@ -100,6 +102,8 @@ public class ConfiguratorActor : IActor
         string userDesire,
         CancellationToken cancellationToken)
     {
+        var assistantConfigSchema = typeof(AssistantConfig).ToJsonSchema().ToJson();
+
         var exampleAssistantConfig = new AssistantConfig
         {
             Name = "PM Assistant",
@@ -134,6 +138,10 @@ Improve my team's project management efficiency
 
 Example output:
 {exampleConfigJson}
+
+Provide your response in a valid JSON document that conforms to the schema specified below without any markdown formatting, additional explanations, or conversation.
+JSON schema:
+{assistantConfigSchema}
 ";
         var promptMessages = new List<ChatMessage>
         {
@@ -155,7 +163,13 @@ Example output:
             promptMessages,
             cancellationToken);
 
-        return JsonSerializer.Deserialize<AssistantConfig>(assistantConfigJson)
+        return JsonSerializer.Deserialize<AssistantConfig>(assistantConfigJson, new JsonSerializerOptions
+               {
+                   WriteIndented = true,
+                   DefaultIgnoreCondition =
+                       JsonIgnoreCondition.WhenWritingNull,
+                   PropertyNameCaseInsensitive = true,
+               })
                ?? throw new InvalidStateException(
                    "The response from OpenAI should not be null");
     }
