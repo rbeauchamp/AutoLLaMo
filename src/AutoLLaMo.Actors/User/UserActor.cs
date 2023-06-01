@@ -190,12 +190,17 @@ namespace AutoLLaMo.Actors.User
                 await ExitAsync(context);
             }
 
-            var provideValue = new ProvideValue(requestValue)
-            {
-                Value = input,
-            };
+            await AnsiConsole.Status().Spinner(Spinner.Known.Default).StartAsync(
+                "Thinking...",
+                async _ =>
+                {
+                    var provideValue = new ProvideValue(requestValue)
+                    {
+                        Value = input,
+                    };
 
-            context.Send<AssistantActor>(provideValue);
+                    await context.RequestAsync<AssistantActor>(provideValue);
+                });
         }
 
         private static async Task<bool> ConfirmOrExitAsync(
