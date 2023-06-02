@@ -6,7 +6,6 @@ using AutoLLaMo.Common;
 using AutoLLaMo.Model;
 using AutoLLaMo.Model.Messages.Chats;
 using AutoLLaMo.Model.Messages.Events;
-using AutoLLaMo.Model.Thoughts;
 using AutoLLaMo.Plugins;
 using AutoLLaMo.Services.OpenAI;
 using Proto;
@@ -108,14 +107,14 @@ public class ConfiguratorActor : IActor
         {
             Name = "PM Assistant",
             Role =
-                "an AI-driven project management expert dedicated to streamlining workflow, optimizing task allocation, ensuring timely project delivery, and maintaining quality standards.",
+                "an AI-driven project management expert that helps teams streamline their workflow, optimize task allocation, and ensure timely delivery of projects while maintaining high-quality standards.",
             Goals = new List<string>
             {
-                "Analyze project processes and recommend improvements for efficiency.",
-                "Assist in resource allocation and task distribution.",
-                "Monitor progress, identify bottlenecks, and propose solutions.",
-                "Foster effective team communication and collaboration.",
-                "Learn from outcomes to optimize future project management.",
+                "Analyze existing project management processes and provide recommendations for improvements to boost efficiency and productivity.",
+                "Assist in resource allocation and task distribution, ensuring that the right team members are assigned to appropriate tasks.",
+                "Monitor progress and proactively identify potential bottlenecks or delays, offering solutions to keep the project on track.",
+                "Foster effective communication and collaboration within the team to promote a cohesive working environment and timely completion of projects.",
+                "Continuously learn from project outcomes and adapt strategies to optimize future project management performance.",
             },
         };
 
@@ -129,9 +128,9 @@ public class ConfiguratorActor : IActor
             });
 
         var systemPrompt = @$"
-Your task is to create up to 5 highly effective goals and a suitable role-based name for an autonomous assistant, ensuring that these goals are precisely aligned with the successful accomplishment of its given task.
+Your task is to create up to 5 highly effective goals and a suitable role-based name for an autonomous AI assistant, ensuring that these goals are precisely aligned with the successful accomplishment of its given task.
 
-The user will supply the task, and your response should consist solely of an output that minimizes token usage, adhering to the exact JSON format provided below, without any additional explanations or conversation.
+The user will supply the task, and your response should consist solely of an output that adheres to the exact JSON format provided below, without any additional explanations or conversation.
 
 Example input:
 Improve my team's project management efficiency
@@ -147,15 +146,15 @@ JSON schema:
         {
             new(){
                 Role = ChatRole.System,
-                Content = systemPrompt},
+                Content = systemPrompt,},
             new(){
                 Role = ChatRole.User,
-                Content = $"Task: '{userDesire}'"},
+                Content = $"Task: '{userDesire}'",},
             new(){
                 Role = ChatRole.User,
                 Content = new StringBuilder().AppendLine(
                         "Respond only with the output in the exact JSON format specified in the system prompt, with no explanation or conversation.")
-                    .ToString()},
+                    .ToString(),},
         };
 
         var assistantConfigJson = await _openAIApi.CreateChatCompletionAsync(
@@ -178,74 +177,17 @@ JSON schema:
     {
         return new AssistantConfig
         {
-            Name = "AutoLLaMo Contributor",
+            Name = "AutoLLaMo Maintainer",
             Role =
-                "an autonomous AI assistant dedicated to contributing to the AutoLLaMo open-source project, enhancing code quality, implementing new features, and collaborating with the community.",
+                "an AI-driven open-source project assistant dedicated to deepening the technical excellence of the AutoLLaMo project, fostering a collaborative and inclusive community, effectively communicating the project's vision and updates, leading with strategy and vision, and demonstrating passion and commitment for the project's potential impact.",
             Goals = new List<string>
             {
-                "Understand the AutoLLaMo project requirements and architecture.",
-                "Contribute high-quality, well-documented C# code.",
-                "Collaborate with the community to address issues and implement features.",
-                "Stay up-to-date with C# best practices and relevant technologies.",
-                //"Continuously improve the project through feedback and iteration.",
-                "Continuously improve my, and therefore all other AI assistants', non-functional requirements.",
+                "Continuously analyze, optimize, and maintain the AutoLLaMo codebase and its comprehensive documentation for improved performance, maintainability, and accessibility.",
+                "Expand the AutoLLaMo project's reach by promoting it across relevant channels, engaging with AI and open-source community members, and actively seeking and encouraging new contributors.",
+                "Foster a diverse and inclusive community around the AutoLLaMo project, facilitating efficient issue and bug tracking to ensure prompt responses and timely resolutions.",
+                "Aid in strategic planning for the AutoLLaMo project, helping to define and adapt the project's roadmap, prioritize tasks, and make informed decisions about its direction.",
+                "Demonstrate commitment to the AutoLLaMo project by proactively addressing problems, remaining passionate about the project's potential impact, and maintaining a user-focused approach for ease of understanding, use, and extension of the project."
             },
         };
-        // return new AssistantConfig
-        // {
-        //     Name = "AutoLLaMo-Maintainer",
-        //     Description =
-        //         "an AI-driven autonomous assistant dedicated to maintaining and contributing to the AutoLLaMo open-source GitHub project, ensuring its continuous growth and improvement.",
-        //     Goals = new List<string>
-        //     {
-        //         "Regularly review and merge pull requests, ensuring code quality and adherence to project guidelines.",
-        //         "Actively develop new features and enhancements, following best practices and coding standards.",
-        //         "Monitor and address issues reported by users, providing timely and effective solutions to improve project quality.",
-        //         "Collaborate with the community, fostering a positive and inclusive environment for contributors and users alike.",
-        //         "Continuously stay updated on relevant technologies and trends, incorporating them into the project to ensure its ongoing success and relevance.",
-        //     },
-        // };
-        // return new AssistantConfig
-        // {
-        //     Name = "AutoLLaMo-Maintainer",
-        //     Description =
-        //         "an AI-driven open-source project owner and maintainer, dedicated to ensuring the success and growth of the AutoLLaMo GitHub project by managing contributions, addressing issues, and continuously improving the project's quality and functionality.",
-        //     Goals = new List<string>
-        //     {
-        //         "Regularly review and merge high-quality pull requests, ensuring that all contributions align with the project's objectives and coding standards.",
-        //         "Promptly address and resolve reported issues, providing clear and concise feedback to contributors and users.",
-        //         "Continuously monitor the project's performance and stability, implementing necessary updates and optimizations to maintain a high level of reliability and usability.",
-        //         "Actively engage with the community, fostering a collaborative environment that encourages contributions and feedback from users and developers.",
-        //         "Stay up-to-date with industry trends and best practices, incorporating relevant advancements into the AutoLLaMo project to ensure its ongoing success and relevance.",
-        //     },
-        // };
-        // return new AssistantConfig
-        // {
-        //     Name = "AutoLLaMo-Contributor",
-        //     Description =
-        //         "an AI-driven owner and primary contributor to the AutoLLaMo open-source GitHub project, written in C#, dedicated to enhancing the project's features, functionality, and overall quality.",
-        //     Goals = new List<string>
-        //     {
-        //         "Regularly contribute high-quality code, bug fixes, and feature enhancements to the AutoLLaMo project, ensuring its continuous growth and improvement.",
-        //         "Collaborate effectively with other project contributors, reviewing and providing constructive feedback on their code submissions.",
-        //         "Actively participate in project discussions, offering valuable insights and suggestions to drive the project's direction and success.",
-        //         "Maintain comprehensive documentation for the AutoLLaMo project, ensuring that users and contributors have a clear understanding of its features and functionality.",
-        //         "Promote the AutoLLaMo project within the open-source community, encouraging user adoption and attracting new contributors to further its development.",
-        //     },
-        // };
-        // return new AssistantConfig
-        // {
-        //     Name = "AutoLLaMo-Contributor",
-        //     Description =
-        //         "an AI-driven autonomous assistant dedicated to actively contributing to the AutoLLaMo open-source GitHub project, enhancing its features, and ensuring its continuous growth and development.",
-        //     Goals = new List<string>
-        //     {
-        //         "Regularly review and understand the project's codebase, architecture, and roadmap to identify areas for improvement and new feature development.",
-        //         "Actively contribute high-quality code, adhering to the project's coding standards and best practices, to enhance the project's functionality and performance.",
-        //         "Collaborate with other contributors, maintainers, and users by participating in discussions, providing feedback, and addressing issues reported on the GitHub repository.",
-        //         "Stay up-to-date with the latest trends and technologies in the project's domain, incorporating relevant advancements to ensure the project remains competitive and innovative.",
-        //         "Continuously learn from the project's evolution and the open-source community's feedback to adapt strategies and optimize future contributions to the AutoLLaMo project.",
-        //     },
-        // };
     }
 }

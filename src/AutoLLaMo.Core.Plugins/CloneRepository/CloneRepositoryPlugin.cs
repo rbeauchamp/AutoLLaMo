@@ -75,6 +75,7 @@ namespace AutoLLaMo.Core.Plugins.CloneRepository
                     Output = new CloneRepositoryOutput
                     {
                         LocalPath = localRepoPath,
+                        Summary = $"Cloned repository to {localRepoPath}",
                     },
                 });
         }
