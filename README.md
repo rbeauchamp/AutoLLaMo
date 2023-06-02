@@ -26,6 +26,7 @@ We would like to thank the [Auto-GPT](https://github.com/Significant-Gravitas/Au
 
 - [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [GPT-4 API access](https://openai.com/waitlist/gpt-4-api)
 
 ## 🚀 Quick Start
 
