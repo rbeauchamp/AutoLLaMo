@@ -39,10 +39,10 @@ git clone https://github.com/rbeauchamp/AutoLLaMo.git
     - Locate the file named `.env.template` within the root `/AutoLLaMo` directory.
     - Duplicate this file and rename it as `.env` by removing the template extension.
     - Open the newly created `.env` file using a text editor.
-    - Search for the line containing `OpenAIApiKey=`.
+    - Search for the line containing `OpenAIApiKey=`
     - After the "=", input your unique OpenAI API Key (excluding any quotes or spaces).
-    - Search for the line containing `OutputDirectory=`.
-    - After the "=", input the directory where you would like AutoLLaMo to write files. For example `${USERPROFILE}\Documents\AutoLLaMoOutput`.
+    - Search for the line containing `OutputDirectory=`
+    - After the "=", input the directory where you would like AutoLLaMo to write files. For example `${USERPROFILE}\Documents\AutoLLaMoOutput`
     - Save the `.env` file and close it. (Do not add this file to source control since it contains your secret keys.)
 4. Open a terminal in the root `/AutoLLaMo` directory and build the image using Docker Compose
 ``` shell
@@ -61,7 +61,7 @@ docker-compose run --rm autollamo
 
 ## 📝 Contributing
 
-We value all the people who are interested in contributing to AutoLLaMo. If you want to contribute to this project, be sure to review the [CONTRIBUTING.md](CONTRIBUTING.md) file. It contains the necessary information about how you can start contributing and the guidelines we follow.
+We value all the people who are interested in contributing to AutoLLaMo. If you want to contribute to this project, be sure to review [Contributing to AutoLLaMo](CONTRIBUTING.md). It contains the necessary information about how you can start contributing and the guidelines we follow.
 
 ## 👥 Code of Conduct
 
