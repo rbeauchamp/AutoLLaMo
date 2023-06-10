@@ -32,9 +32,9 @@ public static class Program
 
         var actorSystem = host.Services.GetRequiredService<ActorSystem>();
 
-        var userActorProps = actorSystem.DI().PropsFor<UserActor>();
+        var userActorProps = actorSystem.DI().PropsFor<IUserActor>();
 
-        actorSystem.Root.SpawnNamed(userActorProps, nameof(UserActor));
+        actorSystem.Root.SpawnNamed(userActorProps, nameof(IUserActor));
 
         await host.WaitForShutdownAsync(actorSystem.Shutdown);
 

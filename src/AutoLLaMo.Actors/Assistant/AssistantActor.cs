@@ -50,10 +50,10 @@ namespace AutoLLaMo.Actors.Assistant
                     context.Forward<PluginActor>();
                     return;
                 case NextCommandExecuted nextCommandExecuted:
-                    context.Send<UserActor>(nextCommandExecuted);
+                    context.Send<IUserActor>(nextCommandExecuted);
                     return;
                 case RequestValue requestValue:
-                    context.Send<UserActor>(requestValue);
+                    context.Send<IUserActor>(requestValue);
                     return;
                 case ConfigureAssistant:
                 case ProvideValue:
@@ -61,7 +61,7 @@ namespace AutoLLaMo.Actors.Assistant
                     return;
                 case AssistantConfigured assistantConfigured:
                     _assistantConfig = assistantConfigured.AssistantConfig;
-                    context.Send<UserActor>(assistantConfigured);
+                    context.Send<IUserActor>(assistantConfigured);
                     return;
                 default:
                     throw new InvalidStateException(
@@ -149,7 +149,7 @@ namespace AutoLLaMo.Actors.Assistant
                     Content = assistantResponseJson,
                 });
 
-            actorContext.Send<UserActor>(new AssistantResponded(assistantResponse, chatWithOpenAI));
+            actorContext.Send<IUserActor>(new AssistantResponded(assistantResponse, chatWithOpenAI));
         }
     }
 }

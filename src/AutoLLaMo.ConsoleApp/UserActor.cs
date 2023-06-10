@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using AutoLLaMo.Actors.Assistant;
+using AutoLLaMo.Actors.User;
 using AutoLLaMo.Common;
 using AutoLLaMo.Model;
 using AutoLLaMo.Model.Messages.Chats;
@@ -9,9 +10,9 @@ using Proto;
 using Proto.Extensions;
 using Spectre.Console;
 
-namespace AutoLLaMo.Actors.User
+namespace AutoLLaMo.ConsoleApp
 {
-    public class UserActor : IActor
+    public class UserActor : IUserActor
     {
         public async Task ReceiveAsync(IContext context)
         {

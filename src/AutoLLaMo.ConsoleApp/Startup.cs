@@ -39,7 +39,7 @@ public static class Startup
             serviceProvider => new ActorSystem().WithServiceProvider(serviceProvider));
 
         // Actors
-        services.AddTransient<UserActor>();
+        services.AddTransient<IUserActor, UserActor>();
         services.AddTransient<AssistantActor>();
         services.AddTransient<ConfiguratorActor>();
         services.AddTransient<PluginActor>();
