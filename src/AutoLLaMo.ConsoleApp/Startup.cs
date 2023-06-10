@@ -17,9 +17,9 @@ using LoadOptions = DotNetEnv.LoadOptions;
 
 namespace AutoLLaMo.ConsoleApp;
 
-public static class Startup
+public class Startup
 {
-    public static void ConfigureServices(IServiceCollection services, string envFilePath)
+    public virtual void ConfigureServices(IServiceCollection services, string envFilePath)
     {
         var config = new ConfigurationBuilder().AddDotNetEnv(
             envFilePath,

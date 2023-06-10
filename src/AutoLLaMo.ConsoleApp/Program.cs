@@ -27,7 +27,8 @@ public static class Program
 
         var host = ConfigureActorSystem();
 
-        // This enables you to initialize services via IHostApplicationLifetime.ApplicationStarted if needed
+        // This enables you to initialize services via
+        // IHostApplicationLifetime.ApplicationStarted if needed
         await host.StartAsync();
 
         var actorSystem = host.Services.GetRequiredService<ActorSystem>();
@@ -46,7 +47,7 @@ public static class Program
         return Host.CreateDefaultBuilder().ConfigureServices(
             services =>
             {
-                Startup.ConfigureServices(
+                new Startup().ConfigureServices(
                     services,
                     ".env");
             }).ConfigureLogging(logging => logging.SetMinimumLevel(LogLevel.Error)).Build();

@@ -5,33 +5,33 @@ using AutoLLaMo.Plugins;
 using AutoLLaMo.Services.OpenAI;
 using Rystem.OpenAi.Chat;
 
-namespace AutoLLaMo.Core.Plugins.GenerateNewCommand
-{
-    public class GenerateNewCommandPlugin : Plugin
-    {
-        private readonly IOpenAIApi _openAIApi;
-        private readonly Settings _settings;
+namespace AutoLLaMo.Core.Plugins.GenerateNewCommand;
 
-        public GenerateNewCommandPlugin(IOpenAIApi openAIApi, Settings settings)
+public class GenerateNewCommandPlugin : Plugin
+{
+    private readonly IOpenAIApi _openAIApi;
+    private readonly Settings _settings;
+
+    public GenerateNewCommandPlugin(IOpenAIApi openAIApi, Settings settings)
+    {
+        _openAIApi = openAIApi;
+        _settings = settings;
+    }
+
+    public override IPluginSignature Signature { get; } = new PluginSignature<GenerateNewCommand, SourceCodeFileLocations>();
+
+    public override async Task<Response> ExecuteAsync(
+        Command command,
+        CancellationToken cancellationToken)
+    {
+        if (command is not GenerateNewCommand generateNewCommand)
         {
-            _openAIApi = openAIApi;
-            _settings = settings;
+            throw new ArgumentException(
+                "Invalid command type.",
+                nameof(command));
         }
 
-        public override IPluginSignature Signature { get; } = new PluginSignature<GenerateNewCommand, SourceCodeFileLocations>();
-
-        public override async Task<Response> ExecuteAsync(
-            Command command,
-            CancellationToken cancellationToken)
-        {
-            if (command is not GenerateNewCommand generateNewCommand)
-            {
-                throw new ArgumentException(
-                    "Invalid command type.",
-                    nameof(command));
-            }
-
-            var systemPrompt = @$"
+        var systemPrompt = @$"
 You are the abstract C# Plugin class, tasked with generating several implementations when provided an instance of GenerateNewCommand. Here are your responsibilities:
 
 1. Create an implementation of Command as specified in GenerateNewCommand.
@@ -134,84 +134,83 @@ JSON schema:
 {typeof(SourceCode).ToJsonSchema().ToJson()}
 ";
 
-            var generateNewCommandJson = JsonSerializer.Serialize(
-                generateNewCommand,
-                new JsonSerializerOptions
-                {
-                    WriteIndented = false,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                });
+        var generateNewCommandJson = JsonSerializer.Serialize(
+            generateNewCommand,
+            new JsonSerializerOptions
+            {
+                WriteIndented = false,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            });
 
-            var userPrompt = $@"
+        var userPrompt = $@"
 Please generate a new command, output, plugin, and tests based on the following GenerateNewCommand instance, and respond using the format specified above:
 {generateNewCommandJson}
 ";
 
-            var promptMessages = new List<ChatMessage>
-            {
-                new()
-                {
-                    Role = ChatRole.System,
-                    Content = systemPrompt,
-                },
-                new()
-                {
-                    Role = ChatRole.User,
-                    Content = userPrompt,
-                },
-            };
-
-            var jsonString = await _openAIApi.CreateChatCompletionAsync(
-                _settings.OpenAIModel,
-                promptMessages,
-                cancellationToken);
-
-            var sourceCode = JsonSerializer.Deserialize<SourceCode>(jsonString, new JsonSerializerOptions
-                               {
-                                   WriteIndented = true,
-                                   DefaultIgnoreCondition =
-                                       JsonIgnoreCondition.WhenWritingNull,
-                                   PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                               })
-                               ?? throw new InvalidStateException(
-                                   "The response from OpenAI should not be null");
-
-            return await WriteToFilesAsync(sourceCode, cancellationToken);
-        }
-
-        private static async Task<Response> WriteToFilesAsync(
-            SourceCode sourceCode,
-            CancellationToken cancellationToken)
+        var promptMessages = new List<ChatMessage>
         {
-            var outputPath = Environment.GetEnvironmentVariable("OutputDirectory");
-
-            if (string.IsNullOrEmpty(outputPath))
+            new()
             {
-                throw new InvalidStateException("OutputDirectory environment variable is not set.");
-            }
-
-            var localPaths = new List<string>();
-
-            foreach (var file in sourceCode.SourceCodeContents)
+                Role = ChatRole.System,
+                Content = systemPrompt,
+            },
+            new()
             {
-                var filePath = Path.Combine(outputPath, file.FileNameWithExtension);
+                Role = ChatRole.User,
+                Content = userPrompt,
+            },
+        };
 
-                // Create the directory if it doesn't exist.
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidStateException("The directory name must not be null."));
+        var jsonString = await _openAIApi.CreateChatCompletionAsync(
+            _settings.OpenAIModel,
+            promptMessages,
+            cancellationToken);
 
-                await File.WriteAllTextAsync(filePath, file.RawContent, cancellationToken);
+        var sourceCode = JsonSerializer.Deserialize<SourceCode>(jsonString, new JsonSerializerOptions
+                         {
+                             WriteIndented = true,
+                             DefaultIgnoreCondition =
+                                 JsonIgnoreCondition.WhenWritingNull,
+                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                         })
+                         ?? throw new InvalidStateException(
+                             "The response from OpenAI should not be null");
 
-                localPaths.Add(filePath);
-            }
+        return await WriteToFilesAsync(sourceCode, cancellationToken);
+    }
 
-            return new Response
-            {
-                Output = new SourceCodeFileLocations
-                {
-                    LocalPaths = localPaths,
-                    Summary = sourceCode.Summary.Replace(".", string.Empty) + " and wrote the source code files to disk. The code has not been added to the AutoLLaMo repository.",
-                },
-            };
+    private static async Task<Response> WriteToFilesAsync(
+        SourceCode sourceCode,
+        CancellationToken cancellationToken)
+    {
+        var outputPath = Environment.GetEnvironmentVariable("OutputDirectory");
+
+        if (string.IsNullOrEmpty(outputPath))
+        {
+            throw new InvalidStateException("OutputDirectory environment variable is not set.");
         }
+
+        var localPaths = new List<string>();
+
+        foreach (var file in sourceCode.SourceCodeContents)
+        {
+            var filePath = Path.Combine(outputPath, file.FileNameWithExtension);
+
+            // Create the directory if it doesn't exist.
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidStateException("The directory name must not be null."));
+
+            await File.WriteAllTextAsync(filePath, file.RawContent, cancellationToken);
+
+            localPaths.Add(filePath);
+        }
+
+        return new Response
+        {
+            Output = new SourceCodeFileLocations
+            {
+                LocalPaths = localPaths,
+                Summary = sourceCode.Summary.Replace(".", string.Empty) + " and wrote the source code files to disk. The code has not been added to the AutoLLaMo repository.",
+            },
+        };
     }
 }

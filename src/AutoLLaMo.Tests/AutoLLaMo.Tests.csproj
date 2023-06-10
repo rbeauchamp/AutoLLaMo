@@ -18,6 +18,7 @@
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GenerateProgramFile>false</GenerateProgramFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -70,6 +71,9 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\src\AutoLLaMo.ConsoleApp\AutoLLaMo.ConsoleApp.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Assistant\" />
     </ItemGroup>
 
 </Project>

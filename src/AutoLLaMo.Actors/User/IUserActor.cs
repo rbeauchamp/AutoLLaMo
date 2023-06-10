@@ -1,8 +1,7 @@
 ﻿using Proto;
 
-namespace AutoLLaMo.Actors.User
+namespace AutoLLaMo.Actors.User;
+
+public interface IUserActor : IActor
 {
-    public interface IUserActor : IActor
-    {
-    }
 }
