@@ -103,7 +103,7 @@ namespace AutoLLaMo.Actors.Assistant
 
                 nextCommandOutputMessage = new ChatMessage
                 {
-                    Role = ChatRole.System,
+                    Role = ChatRole.User,
                     Content =
                         $@"Command {nextCommandExecuted.NextCommandApproved.NextCommand.Name} returned:
 {nextCommandOutput}

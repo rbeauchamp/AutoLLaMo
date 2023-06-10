@@ -19,7 +19,6 @@ namespace AutoLLaMo.Core.Plugins.CloneRepository
         /// An optional working directory name to clone the repository into.
         /// </summary>
         [StringLength(255, MinimumLength = 1)]
-        [RegularExpression(@"^[^\x00-\x1F""*/:<>?\\|]+[^.\x00-\x1F""*/:<>?\\|]$")]
         public string? WorkingDirectoryName { get; init; }
     }
 }
