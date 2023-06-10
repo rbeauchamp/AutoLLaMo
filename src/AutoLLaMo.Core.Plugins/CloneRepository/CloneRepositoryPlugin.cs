@@ -45,6 +45,19 @@ namespace AutoLLaMo.Core.Plugins.CloneRepository
                 outputDirectory,
                 localRootDirectory);
 
+            if (Directory.Exists(localRepoPath))
+            {
+                return Task.FromResult(
+                    new Response
+                    {
+                        Output = new CloneRepositoryOutput
+                        {
+                            LocalPath = localRepoPath,
+                            Summary = $"Repository already exists at {localRepoPath}",
+                        },
+                    });
+            }
+
             try
             {
                 Repository.Clone(

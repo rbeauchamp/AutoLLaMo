@@ -15,6 +15,31 @@ namespace AutoLLaMo.Tests.Plugins.CloneRepo
         }
 
         [Fact]
+        public async Task CloneRepoForExistingDirectoryReturnsLocalPath()
+        {
+            // Arrange
+            const string validRepoUrl = "https://github.com/octocat/Spoon-Knife.git";
+            var tempPath = Path.GetTempPath();
+            var cloneDirectory = Path.Combine(tempPath, Guid.NewGuid().ToString());
+            Directory.CreateDirectory(cloneDirectory);
+            var cloneRepository = new CloneRepository
+            {
+                RepositoryUrl = validRepoUrl,
+                WorkingDirectoryName = cloneDirectory,
+            };
+
+            // Act
+            var response = await _plugin.ExecuteAsync(cloneRepository, CancellationToken.None);
+
+            // Assert
+            var output = response.Output as CloneRepositoryOutput;
+            Debug.Assert(
+                output != null,
+                nameof(output) + " != null");
+            Directory.Exists(output.LocalPath).Should().BeTrue();
+        }
+
+        [Fact]
         public async Task CloneRepoValidUrlClonesRepoAndReturnsLocalPath()
         {
             // Arrange
