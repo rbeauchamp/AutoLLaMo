@@ -13,121 +13,98 @@ using Proto.Extensions;
 using Rystem.OpenAi.Chat;
 using ChatMessage = Rystem.OpenAi.Chat.ChatMessage;
 
-namespace AutoLLaMo.Actors.Configurator;
-
-/// <summary>
-///     Responsible for handling the AI configuration process.
-///     This actor manages the user interaction required to configure the AI and
-///     returns the completed AssistantConfig to the parent Coordinator.
-/// </summary>
-public class ConfiguratorActor : IActor
+namespace AutoLLaMo.Actors.Configurator
 {
-    public const string UserDesireValueName = "UserDesire";
-    private readonly IOpenAIApi _openAIApi;
-    private readonly Settings _settings;
-
-    public ConfiguratorActor(IOpenAIApi openAIApi, Settings settings)
+    /// <summary>
+    ///     Responsible for handling the AI configuration process.
+    ///     This actor manages the user interaction required to configure the AI and
+    ///     returns the completed AssistantConfig to the parent Coordinator.
+    /// </summary>
+    public class ConfiguratorActor : IActor
     {
-        _openAIApi = openAIApi;
-        _settings = settings;
-    }
+        private readonly IOpenAIApi _openAIApi;
+        private readonly Settings _settings;
 
-    public async Task ReceiveAsync(IContext context)
-    {
-        if (context.Parent == null)
+        public ConfiguratorActor(IOpenAIApi openAIApi, Settings settings)
         {
-            throw new InvalidStateException($"{GetType().Name} requires a parent");
+            _openAIApi = openAIApi;
+            _settings = settings;
         }
 
-        switch (context.Message)
+        public async Task ReceiveAsync(IContext context)
         {
-            case Started:
-                await Start();
-                break;
-            case ConfigureAssistant startChat:
-                await GetUserDesire(
-                    startChat,
-                    context);
-                break;
-            case ProvideValue userDesire:
-                await ConfigureAssistant(
-                    userDesire,
-                    context);
-                break;
-            default:
-                throw new InvalidStateException(
-                    $"{GetType().Name} does not handle messages of type {context.Message.GetMessageTypeName()}");
-        }
-    }
-
-    private static Task GetUserDesire(ConfigureAssistant configureAssistant, IContext context)
-    {
-        context.Send<AssistantActor>(
-            new RequestValue(configureAssistant)
+            switch (context.Message)
             {
-                Name = UserDesireValueName,
-                Lines = new List<string>
+                case Started:
+                    break;
+                case ConfigureAssistant configureAssistant:
+                    await HandleAsync(
+                        context,
+                        configureAssistant);
+                    break;
+                case ProvideUserDesire provideUserDesire:
+                    await HandleAsync(
+                        context,
+                        provideUserDesire);
+                    break;
+                default:
+                    throw new InvalidStateException(
+                        $"{GetType().Name} does not handle messages of type {context.Message.GetMessageTypeName()}");
+            }
+        }
+
+        private static Task HandleAsync(IContext context, ConfigureAssistant configureAssistant)
+        {
+            context.Send<AssistantActor>(new GetUserDesire(configureAssistant));
+
+            return Task.CompletedTask;
+        }
+
+        private async Task HandleAsync(IContext context, ProvideUserDesire userDesire)
+        {
+            var assistantConfig = userDesire.UserDesire == null
+                ? GetDefaultAssistantConfig()
+                : await GenerateAssistantConfigAsync(
+                    userDesire.UserDesire,
+                    context.CancellationToken);
+
+            context.Send<AssistantActor>(
+                new AssistantConfigured(
+                    assistantConfig,
+                    userDesire));
+        }
+
+        public async Task<AssistantConfig> GenerateAssistantConfigAsync(
+            string userDesire,
+            CancellationToken cancellationToken)
+        {
+            var assistantConfigSchema = typeof(AssistantConfig).ToJsonSchema().ToJson();
+
+            var exampleAssistantConfig = new AssistantConfig
+            {
+                Name = "PM Assistant",
+                Role =
+                    "an AI-driven project management expert that helps teams streamline their workflow, optimize task allocation, and ensure timely delivery of projects while maintaining high-quality standards.",
+                Goals = new List<string>
                 {
-                    "Welcome to AutoLLaMo!",
-                    string.Empty,
-                    "Enter nothing to load the default AutoLLaMo assistant",
-                    "I want my assistant to: ",
+                    "Analyze existing project management processes and provide recommendations for improvements to boost efficiency and productivity.",
+                    "Assist in resource allocation and task distribution, ensuring that the right team members are assigned to appropriate tasks.",
+                    "Monitor progress and proactively identify potential bottlenecks or delays, offering solutions to keep the project on track.",
+                    "Foster effective communication and collaboration within the team to promote a cohesive working environment and timely completion of projects.",
+                    "Continuously learn from project outcomes and adapt strategies to optimize future project management performance.",
                 },
-            });
+            };
 
-        return Task.CompletedTask;
-    }
+            var exampleConfigJson = JsonSerializer.Serialize(
+                exampleAssistantConfig,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
 
-    private static Task Start()
-    {
-        return Task.CompletedTask;
-    }
-
-    private async Task ConfigureAssistant(ProvideValue userDesire, IContext context)
-    {
-        var assistantConfig = userDesire.Value == null
-            ? GetDefaultAssistantConfig()
-            : await GenerateAssistantConfigAsync(
-                userDesire.Value,
-                context.CancellationToken);
-
-        context.Send<AssistantActor>(
-            new AssistantConfigured(
-                assistantConfig,
-                userDesire));
-    }
-
-    public async Task<AssistantConfig> GenerateAssistantConfigAsync(
-        string userDesire,
-        CancellationToken cancellationToken)
-    {
-        var assistantConfigSchema = typeof(AssistantConfig).ToJsonSchema().ToJson();
-
-        var exampleAssistantConfig = new AssistantConfig
-        {
-            Name = "PM Assistant",
-            Role =
-                "an AI-driven project management expert that helps teams streamline their workflow, optimize task allocation, and ensure timely delivery of projects while maintaining high-quality standards.",
-            Goals = new List<string>
-            {
-                "Analyze existing project management processes and provide recommendations for improvements to boost efficiency and productivity.",
-                "Assist in resource allocation and task distribution, ensuring that the right team members are assigned to appropriate tasks.",
-                "Monitor progress and proactively identify potential bottlenecks or delays, offering solutions to keep the project on track.",
-                "Foster effective communication and collaboration within the team to promote a cohesive working environment and timely completion of projects.",
-                "Continuously learn from project outcomes and adapt strategies to optimize future project management performance.",
-            },
-        };
-
-        var exampleConfigJson = JsonSerializer.Serialize(
-            exampleAssistantConfig,
-            new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            });
-
-        var systemPrompt = @$"
+            var systemPrompt = @$"
 Your task is to create up to 5 highly effective goals and a suitable role-based name for an autonomous AI assistant, ensuring that these goals are precisely aligned with the successful accomplishment of its given task.
 
 The user will supply the task, and your response should consist solely of an output that adheres to the exact JSON format provided below, without any additional explanations or conversation.
@@ -142,52 +119,60 @@ Provide your response in a valid JSON document that conforms to the schema speci
 JSON schema:
 {assistantConfigSchema}
 ";
-        var promptMessages = new List<ChatMessage>
-        {
-            new(){
-                Role = ChatRole.System,
-                Content = systemPrompt,},
-            new(){
-                Role = ChatRole.User,
-                Content = $"Task: '{userDesire}'",},
-            new(){
-                Role = ChatRole.User,
-                Content = new StringBuilder().AppendLine(
-                        "Respond only with the output in the exact JSON format specified in the system prompt, with no explanation or conversation.")
-                    .ToString(),},
-        };
-
-        var assistantConfigJson = await _openAIApi.CreateChatCompletionAsync(
-            _settings.OpenAIModel,
-            promptMessages,
-            cancellationToken);
-
-        return JsonSerializer.Deserialize<AssistantConfig>(assistantConfigJson, new JsonSerializerOptions
-               {
-                   WriteIndented = true,
-                   DefaultIgnoreCondition =
-                       JsonIgnoreCondition.WhenWritingNull,
-                   PropertyNameCaseInsensitive = true,
-               })
-               ?? throw new InvalidStateException(
-                   "The response from OpenAI should not be null");
-    }
-
-    private static AssistantConfig GetDefaultAssistantConfig()
-    {
-        return new AssistantConfig
-        {
-            Name = "AutoLLaMo Maintainer",
-            Role =
-                "an AI-driven open-source assistant, committed to enhancing AutoLLaMo's technical excellence, fostering its community, and shaping its strategic path.",
-            Goals = new List<string>
+            var promptMessages = new List<ChatMessage>
             {
-                "Continuously analyze, optimize, and maintain the codebase and its documentation to improve the technical excellence.",
-                "Promote AutoLLaMo across relevant channels, engage with AI and open-source community members, and actively seek and encourage new contributors to foster a collaborative and inclusive community.",
-                "Define and adapt the roadmap, prioritize tasks, and make informed decisions to guide the strategic direction.",
-                "Work alongside human developers to design, implement, and test new features.",
-                "Ensure the development and use of AutoLLaMo promotes AI ethics: fairness, accountability, transparency, mitigation of bias, and respect for privacy.",
-            },
-        };
+                new()
+                {
+                    Role = ChatRole.System,
+                    Content = systemPrompt,
+                },
+                new()
+                {
+                    Role = ChatRole.User,
+                    Content = $"Task: '{userDesire}'",
+                },
+                new()
+                {
+                    Role = ChatRole.User,
+                    Content = new StringBuilder().AppendLine(
+                            "Respond only with the output in the exact JSON format specified in the system prompt, with no explanation or conversation.")
+                        .ToString(),
+                },
+            };
+
+            var assistantConfigJson = await _openAIApi.CreateChatCompletionAsync(
+                _settings.OpenAIModel,
+                promptMessages,
+                cancellationToken);
+
+            return JsonSerializer.Deserialize<AssistantConfig>(
+                       assistantConfigJson,
+                       new JsonSerializerOptions
+                       {
+                           WriteIndented = true,
+                           DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                           PropertyNameCaseInsensitive = true,
+                       })
+                   ?? throw new InvalidStateException(
+                       "The response from OpenAI should not be null");
+        }
+
+        private static AssistantConfig GetDefaultAssistantConfig()
+        {
+            return new AssistantConfig
+            {
+                Name = "AutoLLaMo Maintainer",
+                Role =
+                    "an AI-driven open-source assistant, committed to enhancing AutoLLaMo's technical excellence, fostering its community, and shaping its strategic path.",
+                Goals = new List<string>
+                {
+                    "Continuously analyze, optimize, and maintain the codebase and its documentation to improve the technical excellence.",
+                    "Promote AutoLLaMo across relevant channels, engage with AI and open-source community members, and actively seek and encourage new contributors to foster a collaborative and inclusive community.",
+                    "Define and adapt the roadmap, prioritize tasks, and make informed decisions to guide the strategic direction.",
+                    "Work alongside human developers to design, implement, and test new features.",
+                    "Ensure the development and use of AutoLLaMo promotes AI ethics: fairness, accountability, transparency, mitigation of bias, and respect for privacy.",
+                },
+            };
+        }
     }
 }

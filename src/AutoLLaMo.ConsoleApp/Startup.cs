@@ -8,45 +8,47 @@ using AutoLLaMo.Core.Plugins.WriteToFiles;
 using AutoLLaMo.Model;
 using AutoLLaMo.Plugins;
 using AutoLLaMo.Services.OpenAI;
+using DotNetEnv;
 using DotNetEnv.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Proto;
 using Proto.DependencyInjection;
-using LoadOptions = DotNetEnv.LoadOptions;
 
-namespace AutoLLaMo.ConsoleApp;
-
-public class Startup
+namespace AutoLLaMo.ConsoleApp
 {
-    public virtual void ConfigureServices(IServiceCollection services, string envFilePath)
+    public class Startup
     {
-        var config = new ConfigurationBuilder().AddDotNetEnv(
-            envFilePath,
-            LoadOptions.TraversePath()).AddEnvironmentVariables().Build();
-
-        var settings = config.Get<Settings>()
-                       ?? throw new InvalidStateException("Settings not found");
-
-        // Services
-        services.AddSingleton(settings);
-        services.AddOpenAi(openAiSettings =>
+        public virtual void ConfigureServices(IServiceCollection services, string envFilePath)
         {
-            openAiSettings.ApiKey = settings.OpenAIApiKey;
-        });
-        services.AddSingleton<IOpenAIApi, OpenAIApi>();
-        services.AddSingleton(
-            serviceProvider => new ActorSystem().WithServiceProvider(serviceProvider));
+            var config = new ConfigurationBuilder().AddDotNetEnv(
+                envFilePath,
+                LoadOptions.TraversePath()).AddEnvironmentVariables().Build();
 
-        // Actors
-        services.AddTransient<IUserActor, UserActor>();
-        services.AddTransient<AssistantActor>();
-        services.AddTransient<ConfiguratorActor>();
-        services.AddTransient<PluginActor>();
+            var settings = config.Get<Settings>()
+                           ?? throw new InvalidStateException("Settings not found");
 
-        // Plugins
-        services.AddTransient<Plugin, GenerateNewCommandPlugin>();
-        services.AddTransient<Plugin, WriteToFilesPlugin>();
-        services.AddTransient<Plugin, CloneRepositoryPlugin>();
+            // Services
+            services.AddSingleton(settings);
+            services.AddOpenAi(
+                openAiSettings =>
+                {
+                    openAiSettings.ApiKey = settings.OpenAIApiKey;
+                });
+            services.AddSingleton<IOpenAIApi, OpenAIApi>();
+            services.AddSingleton(
+                serviceProvider => new ActorSystem().WithServiceProvider(serviceProvider));
+
+            // Actors
+            services.AddTransient<IUserActor, UserActor>();
+            services.AddTransient<AssistantActor>();
+            services.AddTransient<ConfiguratorActor>();
+            services.AddTransient<PluginActor>();
+
+            // Plugins
+            services.AddTransient<Plugin, GenerateNewCommandPlugin>();
+            services.AddTransient<Plugin, WriteToFilesPlugin>();
+            services.AddTransient<Plugin, CloneRepositoryPlugin>();
+        }
     }
 }

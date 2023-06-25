@@ -44,7 +44,7 @@ public class AssistantActor : IActor
             case Started:
                 return;
             case ChatWithOpenAI chatWithOpenAI:
-                await ChatWithOpenAIAsync(context, chatWithOpenAI);
+                await HandleAsync(context, chatWithOpenAI);
                 return;
             case NextCommandApproved:
                 context.Forward<PluginActor>();
@@ -52,11 +52,11 @@ public class AssistantActor : IActor
             case NextCommandExecuted nextCommandExecuted:
                 context.Send<IUserActor>(nextCommandExecuted);
                 return;
-            case RequestValue requestValue:
-                context.Send<IUserActor>(requestValue);
+            case GetUserDesire getUserDesire:
+                context.Send<IUserActor>(getUserDesire);
                 return;
             case ConfigureAssistant:
-            case ProvideValue:
+            case ProvideUserDesire:
                 context.Forward<ConfiguratorActor>();
                 return;
             case AssistantConfigured assistantConfigured:
@@ -75,9 +75,9 @@ public class AssistantActor : IActor
     /// <param name="actorContext">The actor context.</param>
     /// <param name="chatWithOpenAI">The message that initiated the chat with OpenAI.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    /// <exception cref="AutoLLaMo.Model.InvalidStateException">The {nameof(AssistantConfig)} must not be null.</exception>
-    /// <exception cref="System.InvalidOperationException">Could not deserialize the assistant response: {assistantResponseJson}</exception>
-    private async Task ChatWithOpenAIAsync(
+    /// <exception cref="InvalidStateException">The {nameof(AssistantConfig)} must not be null.</exception>
+    /// <exception cref="InvalidOperationException">Could not deserialize the assistant response: {assistantResponseJson}</exception>
+    private async Task HandleAsync(
         IContext actorContext,
         ChatWithOpenAI chatWithOpenAI)
     {

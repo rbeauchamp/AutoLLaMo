@@ -1,13 +1,33 @@
-﻿using AutoLLaMo.Actors.User;
+﻿using AutoLLaMo.ConsoleApp;
+using AutoLLaMo.Model.Messages.Chats;
+using AutoLLaMo.Plugins;
 using Proto;
 
 namespace AutoLLaMo.Tests.Assistant
 {
-    public class TestUserActor : IUserActor
+    public class TestUserActor : UserActor
     {
-        public Task ReceiveAsync(IContext context)
+        public List<Message> Messages { get; } = new();
+
+        protected override Task HandleAsync(IContext context)
         {
-            throw new NotSupportedException();
+            switch (context.Message)
+            {
+                case GetMessages getMessages:
+                    
+                    return;
+            }
         }
+
+        protected override Task HandleAsync(IContext context, GetUserDesire getUserDesire)
+        {
+            Messages.Add(getUserDesire);
+
+            return Task.CompletedTask;
+        }
+    }
+
+    public record GetMessages : Message
+    {
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace AutoLLaMo.Model.Messages.Chats;
+﻿using AutoLLaMo.Plugins;
+
+namespace AutoLLaMo.Model.Messages.Chats;
 
 /// <summary>
 ///     Configure the assistant.
 /// </summary>
-public record ConfigureAssistant : ChatMessage;
+public record ConfigureAssistant : Message;
