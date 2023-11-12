@@ -1,4 +1,8 @@
 ﻿using AutoLLaMo.Actors.User;
+using AutoLLaMo.Model.Messages.Chats;
+using AutoLLaMo.Plugins;
+using FluentAssertions;
+using Proto;
 using Proto.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
@@ -11,6 +15,7 @@ public class AssistantTests : TestBase
     {
     }
 
+    // see https://gist.github.com/xpando/2571365 for retries
     [Fact]
     public async Task AssistantRequestsUserDesireWhenStartingChat()
     {
@@ -22,7 +27,10 @@ public class AssistantTests : TestBase
         var userActor = ActorSystem.Root.SpawnNamed(userActorProps, nameof(IUserActor));
 
         // Assert
-        //userActor.
+        await Task.Delay(1000);
+        var messages = await ActorSystem.Root.RequestAsync<List<Message>>(userActor, new GetMessages());
+
+        messages.Should().ContainSingle(message => message is GetUserDesire);
 
         await FinishAsync();
     }

@@ -2,11 +2,9 @@
 using AutoLLaMo.Actors.Assistant;
 using AutoLLaMo.Actors.User;
 using AutoLLaMo.Common;
-using AutoLLaMo.Model;
 using AutoLLaMo.Model.Messages.Chats;
 using AutoLLaMo.Model.Messages.Events;
 using Proto;
-using Proto.Extensions;
 using Spectre.Console;
 
 namespace AutoLLaMo.ConsoleApp

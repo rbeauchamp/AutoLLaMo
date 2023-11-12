@@ -13,10 +13,12 @@ namespace AutoLLaMo.Tests.Assistant
         {
             switch (context.Message)
             {
-                case GetMessages getMessages:
-                    
-                    return;
+                case GetMessages:
+                    context.Respond(Messages);
+                    break;
             }
+
+            return Task.CompletedTask;
         }
 
         protected override Task HandleAsync(IContext context, GetUserDesire getUserDesire)
@@ -25,9 +27,5 @@ namespace AutoLLaMo.Tests.Assistant
 
             return Task.CompletedTask;
         }
-    }
-
-    public record GetMessages : Message
-    {
     }
 }

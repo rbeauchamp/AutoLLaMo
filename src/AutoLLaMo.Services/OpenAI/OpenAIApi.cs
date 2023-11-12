@@ -57,9 +57,9 @@ public class OpenAIApi : IOpenAIApi
             .WithTemperature(temperature)
             .WithNumberOfChoicesPerPrompt(value: 1)
             .SetMaxTokens(actualMaxTokens)
-            .ExecuteAsync(cancellationToken);
+            .ExecuteAsync(cancellationToken: cancellationToken);
 
-        var content = results.Choices?[index: 0].Message?.Content;
+        var content = results.Choices?[0].Message?.Content;
 
         return content
                ?? throw new InvalidStateException(
